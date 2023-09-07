@@ -28,6 +28,14 @@ namespace laba
             
             Console.WriteLine("Input password");
             password = Console.ReadLine();
+            if (Validation.ValidatePassword(password))
+            {
+                Console.WriteLine("Password good");
+            }
+            else
+            {
+                Console.WriteLine("Password bad");
+            }
             Console.WriteLine("Input password");
             passwordVerify = Console.ReadLine();
 
