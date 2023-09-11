@@ -17,25 +17,9 @@ namespace laba
             {
                 if (login.StartsWith("+") && login.Count() == 15)
                 {
-                    if (login[2].Equals('-') && login[6].Equals('-') && login[10].Equals('-'))
-                    {
-                        foreach (char c in login)
-                        {
-                            if (!char.IsDigit(c))
-                            {
-                                if (c != '+')
-                                {
-                                    if (c != '-')
-                                    {
-                                        return false;
-                                    }
-                                    return false;
-                                }
-                                return false;
-                            }
-                        }
-                        return true;
-                    }
+                    var regex = new Regex(@"\d{1}-\d{3}-\d{3}-\d{4}");
+                    var isValidated = regex.IsMatch(login);
+                    return isValidated;
                 }
                 else if (login.Contains('@') && login.Contains('.'))
                 {
@@ -67,15 +51,17 @@ namespace laba
         }
         public static bool ValidatePassword(String password)
         {
-            var regex = new Regex(@"[^[A-z]");
+            var noEng = new Regex(@"[^[A-z]");
             var hasNumber = new Regex(@"[0-9]+");
             var hasUpperCase = new Regex(@"[А-Я]+");
             var hasLowerCase = new Regex(@"[а-я]+");
-            var isValidated = regex.IsMatch(password) 
+            var hasSpecSymbol = new Regex(@"\W{1}");
+            var isValidated = noEng.IsMatch(password) 
                 && password.Count() >= minPasswordLength 
                 && hasNumber.IsMatch(password)
                 && hasUpperCase.IsMatch(password)
-                && hasLowerCase.IsMatch(password);
+                && hasLowerCase.IsMatch(password)
+                && hasSpecSymbol.IsMatch(password);
             return isValidated;
         }
     }

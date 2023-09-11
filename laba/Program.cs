@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using Serilog;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace laba
 {
@@ -10,39 +9,77 @@ namespace laba
     {
         static void Main(string[] args)
         {
-            DBManager bd = new DBManager();
-            String login;
-            String password;
-            String passwordVerify;
-            Console.WriteLine("Registration");
-            Console.WriteLine("Input login(+x-xxx-xxx-xxxx)");
-            login = Console.ReadLine();
-            if(Validation.ValidateLogin(login))
+            try
             {
-                Console.WriteLine("Login good");
-            }
-            else
-            {
-                Console.WriteLine("Login bad");
-            }
-            
-            Console.WriteLine("Input password");
-            password = Console.ReadLine();
-            if (Validation.ValidatePassword(password))
-            {
-                Console.WriteLine("Password good");
-            }
-            else
-            {
-                Console.WriteLine("Password bad");
-            }
-            Console.WriteLine("Input password");
-            passwordVerify = Console.ReadLine();
+                using (var bd = new DBManager().db)
+                {
+                    string template = "{Timestamp:HH:mm:ss} | [{Level:u3}] | {Message:lj}{NewLine}{Exception}";
+                    Log.Logger = new LoggerConfiguration()
+                        .MinimumLevel.Debug()
+                        .WriteTo.Console(outputTemplate: template)
+                        .WriteTo.File("logs/file_.txt", outputTemplate: template)
+                        .CreateLogger();
+                    Log.Verbose("Logger configured");
 
-            Console.WriteLine("Login: " + login + "\nPassword: " + password + "\n");
-            foreach(Users users in bd.db.Users)
+                    bool loginBusy = true;
+                    String login = "";
+                    String password;
+                    String passwordVerify;
+                    Console.WriteLine("Registration");
+                    while (loginBusy || !Validation.ValidateLogin(login))
+                    {
+                        Console.WriteLine("Input login");
+                        login = Console.ReadLine();
+                        loginBusy = bd.Users.Where(x => x.userLogin == login).Count() > 0;
+
+                        if (loginBusy)
+                        {
+                            Log.Warning("Login is busy");
+                        }
+                    }
+                    Log.Information("Login is correct");
+                    do
+                    {
+                        do
+                        {
+                            Console.WriteLine("Input password");
+                            password = Console.ReadLine();
+                            if (!Validation.ValidatePassword(password))
+                            {
+                                Log.Warning("Password is not correct");
+                            }
+                        }
+                        while (!Validation.ValidatePassword(password));
+                        Log.Information("Password correct. Input once more.");
+                        passwordVerify = Console.ReadLine();
+                        if (passwordVerify != password)
+                        {
+                            Log.Warning("Password are different");
+                        }
+                    }
+                    while (password != passwordVerify);
+
+
+                    Users tmpUser = new Users() { userLogin = login, userPSW = password };
+                    bd.Users.Add(tmpUser);
+                    bd.SaveChanges();
+
+
+                    Log.Information("Registration succesful");
+
+
+
+
+                    Console.WriteLine("Login: " + login + "\nPassword: " + password + "\n");
+                    foreach (Users users in bd.Users)
+                    {
+                        Console.WriteLine(users.userLogin);
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine(users.userLogin);
+                Log.Error(ex.ToString());
             }
             Console.ReadKey();
         }
