@@ -30,6 +30,10 @@ namespace laba
                     {
                         Console.WriteLine("Input login");
                         login = Console.ReadLine();
+                        if(!Validation.ValidateLogin(login))
+                        {
+                            Log.Warning("Login is not correct");
+                        }
                         loginBusy = bd.Users.Where(x => x.userLogin == login).Count() > 0;
 
                         if (loginBusy)
