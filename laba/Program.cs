@@ -41,7 +41,7 @@ namespace laba
                             Log.Warning("Login is busy");
                         }
                     }
-                    Log.Information("Login is correct");
+                    Log.Information("Login is correct!");
                     do
                     {
                         do
