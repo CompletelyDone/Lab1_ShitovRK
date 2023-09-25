@@ -9,8 +9,8 @@ namespace TestValidation
         {
         }
 
-        [TestCase("Алёша", "password", "password", true)]
-        public void TestCorrectLogin(string _login, string _password, string _verifyPassword, bool _contains)
+        [TestCase("Алёша", "password", "password")]
+        public void TestCorrectLogin(string _login, string _password, string _verifyPassword)
         {
             //Настройка, arrange
             var login = _login;
@@ -29,8 +29,8 @@ namespace TestValidation
                     Assert.IsTrue(contains);
                 });
         }
-        [TestCase("Вася", "password", "password", true)]
-        public void TestMinimalLoginLength(string _login, string _password, string _verifyPassword, bool _contains)
+        [TestCase("Вася", "password", "password")]
+        public void TestMinimalLoginLength(string _login, string _password, string _verifyPassword)
         {
             //Настройка, arrange
             var login = _login;
@@ -49,8 +49,8 @@ namespace TestValidation
                     Assert.IsTrue(contains);
                 });
         }
-        [TestCase("pepe@pepe.pepe@", "password", "password", true)]
-        public void TestLoginAsEmail(string _login, string _password, string _verifyPassword, bool _contains)
+        [TestCase("pepe@pepe.pepe@", "password", "password")]
+        public void TestLoginAsEmail(string _login, string _password, string _verifyPassword)
         {
             //Настройка, arrange
             var login = _login;
