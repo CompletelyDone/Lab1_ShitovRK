@@ -69,5 +69,25 @@ namespace TestValidation
                     Assert.IsTrue(contains);
                 });
         }
+        [TestCase("+7-999--52-5565", "password", "password")]
+        public void TestLoginAsPhoneNumber(string _login, string _password, string _verifyPassword)
+        {
+            //Настройка, arrange
+            var login = _login;
+            var password = _password;
+            var verifyPassword = _verifyPassword;
+            //Действие, act
+            var isValidated = Validation.Validate(login, password, verifyPassword);
+            var contains = isValidated.Item2.Contains("Phone number isn't correct\n");
+
+            //Проверка, assert
+            Console.WriteLine(isValidated.Item2);
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.IsFalse(isValidated.Item1);
+                    Assert.IsTrue(contains);
+                });
+        }
     }
 }

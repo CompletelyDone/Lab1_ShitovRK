@@ -49,6 +49,7 @@ namespace laba
                 }
                 else
                 {
+                    var newReg = new Regex(@"");
                     var latinica = new Regex(@"[A-z]");
                     var numbers = new Regex(@"[0-9]");
                     var chara = new Regex(@"[_]");
