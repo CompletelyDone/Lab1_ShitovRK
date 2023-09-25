@@ -119,7 +119,23 @@ namespace laba
 
             if(password != verifyPassword)
             {
-                returningMessage.Item2 += "Passwords not matched";
+                returningMessage.Item2 += "Passwords not matched\n";
+            }
+
+            try
+            {
+                using(var db = new DBManager().db)
+                {
+                    if(db.Users.Where(x=>x.userLogin == login).Count() > 0)
+                    {
+                        isValidatedLogin = false;
+                        returningMessage.Item2 += "Login is busy";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                returningMessage.Item2 += ex.Message;
             }
 
             if(isValidatedPassword && isValidatedLogin && password == verifyPassword)
