@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -34,26 +35,16 @@ namespace laba
                 }
                 else if (login.Contains('@') && login.Contains('.'))
                 {
-                    var trimmedEmail = login.Trim();
-                    if (trimmedEmail.EndsWith("."))
-                    {
-                        returningMessage.Item1 = false;
-                    }
                     try
                     {
-                        var addr = new System.Net.Mail.MailAddress(login);
-                        if(addr.Address == trimmedEmail)
-                        {
-                            isValidatedLogin = true;
-                        }
-                        else
-                        {
-                            returningMessage.Item2 += "Email isn't correct\n";
-                        }
-                    }
-                    catch
-                    {
+                        MailAddress m = new MailAddress(login);
+
                         isValidatedLogin = true;
+                    }
+                    catch (FormatException)
+                    {
+                        isValidatedLogin = false;
+                        returningMessage.Item2 += "Email isn't correct\n";
                     }
                 }
                 else
@@ -75,7 +66,7 @@ namespace laba
             }
             else
             {
-                returningMessage.Item2 += "Minimal login length is 5";
+                returningMessage.Item2 += "Minimal login length is 5\n";
             }
 
             var noEng = new Regex(@"[^[A-z]");
