@@ -73,6 +73,10 @@ namespace laba
                     }
                 }
             }
+            else
+            {
+                returningMessage.Item2 += "Minimal login length is 5";
+            }
 
             var noEng = new Regex(@"[^[A-z]");
             if (!noEng.IsMatch(password))

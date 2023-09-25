@@ -9,10 +9,9 @@ namespace TestValidation
         {
         }
 
-        [TestCase("Алёша", "password", "password")]
-        [TestCase("Petushara228", "password", "password")]
-        [TestCase("Vasyaloh", "password", "password")]
-        public void Test(string _login, string _password, string _verifyPassword)
+        [TestCase("Алёша", "password", "password", true)]
+        [TestCase("Алёша", "password", "password", true)]
+        public void TestCorrectLogin(string _login, string _password, string _verifyPassword, bool _contains)
         {
             //Настройка, arrange
             var login = _login;
@@ -20,10 +19,36 @@ namespace TestValidation
             var verifyPassword = _verifyPassword;
             //Действие, act
             var isValidated = Validation.Validate(login, password, verifyPassword);
+            var contains = isValidated.Item2.Contains("Login not correct");
 
             //Проверка, assert
             Console.WriteLine(isValidated.Item2);
-            Assert.IsFalse(isValidated.Item1);
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.IsFalse(isValidated.Item1);
+                    Assert.IsTrue(contains);
+                });
+        }
+        [TestCase("Вася", "password", "password", true)]
+        public void TestMinimalLoginLength(string _login, string _password, string _verifyPassword, bool _contains)
+        {
+            //Настройка, arrange
+            var login = _login;
+            var password = _password;
+            var verifyPassword = _verifyPassword;
+            //Действие, act
+            var isValidated = Validation.Validate(login, password, verifyPassword);
+            var contains = isValidated.Item2.Contains("Minimal login length is 5\n");
+
+            //Проверка, assert
+            Console.WriteLine(isValidated.Item2);
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.IsFalse(isValidated.Item1);
+                    Assert.IsTrue(contains);
+                });
         }
     }
 }
