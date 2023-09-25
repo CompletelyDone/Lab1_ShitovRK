@@ -59,20 +59,8 @@ namespace laba
                 else
                 {
                     var latinica = new Regex(@"[A-z]");
-                    if(!latinica.IsMatch(login))
-                    {
-                        returningMessage.Item2 += "No latinica in login\n";
-                    }
                     var numbers = new Regex(@"[0-9]");
-                    if (!numbers.IsMatch(login))
-                    {
-                        returningMessage.Item2 += "No numbers in login\n";
-                    }
                     var chara = new Regex(@"[_]");
-                    if (!chara.IsMatch(login))
-                    {
-                        returningMessage.Item2 += "No special symbols in login\n";
-                    }
                     isValidatedLogin = latinica.IsMatch(login) || numbers.IsMatch(login) || chara.IsMatch(login);
                     if(isValidatedLogin)
                     {
@@ -81,6 +69,7 @@ namespace laba
                     else
                     {
                         returningMessage.Item1 = false;
+                        returningMessage.Item2 += "Login not correct\n";
                     }
                 }
             }
@@ -131,21 +120,27 @@ namespace laba
                         isValidatedLogin = false;
                         returningMessage.Item2 += "Login is busy";
                     }
+
+                    if (isValidatedPassword && isValidatedLogin && password == verifyPassword)
+                    {
+                        Users user = new Users() { userLogin = login, userPSW = password };
+                        db.Users.Add(user);
+                        db.SaveChanges();
+                        returningMessage.Item1 = true;
+                    }
+                    else
+                    {
+                        returningMessage.Item1 = false;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 returningMessage.Item2 += ex.Message;
-            }
-
-            if(isValidatedPassword && isValidatedLogin && password == verifyPassword)
-            {
-                returningMessage.Item1 = true;
-            }
-            else
-            {
                 returningMessage.Item1 = false;
             }
+
+            
 
 
             return returningMessage;
