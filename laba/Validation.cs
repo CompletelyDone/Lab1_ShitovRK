@@ -132,7 +132,7 @@ namespace laba
             }
             catch (Exception ex)
             {
-                returningMessage.Item2 += ex.Message;
+                returningMessage.Item2 += "Ошибка подключения к БД: " + ex.Message + "\n";
                 returningMessage.Item1 = false;
             }
 
