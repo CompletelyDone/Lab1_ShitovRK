@@ -49,7 +49,6 @@ namespace laba
                 }
                 else
                 {
-                    var newReg = new Regex(@"");
                     var latinica = new Regex(@"[A-z]");
                     var numbers = new Regex(@"[0-9]");
                     var chara = new Regex(@"[_]");
@@ -105,6 +104,10 @@ namespace laba
             if(password != verifyPassword)
             {
                 returningMessage.Item2 += "Passwords not matched\n";
+            }
+            if(password.Count() < minPasswordLength)
+            {
+                returningMessage.Item2 += "Minimal password length is 7\n";
             }
 
             try

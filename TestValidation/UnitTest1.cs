@@ -29,6 +29,26 @@ namespace TestValidation
                     Assert.IsTrue(contains);
                 });
         }
+        [TestCase("........", "password", "password")]
+        public void TestFullSymbolsLogin(string _login, string _password, string _verifyPassword)
+        {
+            //Настройка, arrange
+            var login = _login;
+            var password = _password;
+            var verifyPassword = _verifyPassword;
+            //Действие, act
+            var isValidated = Validation.Validate(login, password, verifyPassword);
+            var contains = isValidated.Item2.Contains("Login not correct");
+
+            //Проверка, assert
+            Console.WriteLine(isValidated.Item2);
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.IsFalse(isValidated.Item1);
+                    Assert.IsTrue(contains);
+                });
+        }
         [TestCase("First", "password", "password")]
         public void TestLoginIsBusy(string _login, string _password, string _verifyPassword)
         {
@@ -39,6 +59,26 @@ namespace TestValidation
             //Действие, act
             var isValidated = Validation.Validate(login, password, verifyPassword);
             var contains = isValidated.Item2.Contains("Login is busy");
+
+            //Проверка, assert
+            Console.WriteLine(isValidated.Item2);
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.IsFalse(isValidated.Item1);
+                    Assert.IsFalse(contains);
+                });
+        }
+        [TestCase("_________________", "password", "password")]
+        public void TestStrangeLogin(string _login, string _password, string _verifyPassword)
+        {
+            //Настройка, arrange
+            var login = _login;
+            var password = _password;
+            var verifyPassword = _verifyPassword;
+            //Действие, act
+            var isValidated = Validation.Validate(login, password, verifyPassword);
+            var contains = !isValidated.Item2.Contains("Login not correct");
 
             //Проверка, assert
             Console.WriteLine(isValidated.Item2);
@@ -59,6 +99,26 @@ namespace TestValidation
             //Действие, act
             var isValidated = Validation.Validate(login, password, verifyPassword);
             var contains = isValidated.Item2.Contains("Minimal login length is 5\n");
+
+            //Проверка, assert
+            Console.WriteLine(isValidated.Item2);
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.IsFalse(isValidated.Item1);
+                    Assert.IsTrue(contains);
+                });
+        }
+        [TestCase("Вася", "pas", "ord")]
+        public void TestMinimalPasswordLength(string _login, string _password, string _verifyPassword)
+        {
+            //Настройка, arrange
+            var login = _login;
+            var password = _password;
+            var verifyPassword = _verifyPassword;
+            //Действие, act
+            var isValidated = Validation.Validate(login, password, verifyPassword);
+            var contains = isValidated.Item2.Contains("Minimal password length is 7\n");
 
             //Проверка, assert
             Console.WriteLine(isValidated.Item2);
@@ -91,6 +151,26 @@ namespace TestValidation
         }
         [TestCase("+7-999--52-5565", "password", "password")]
         public void TestLoginAsPhoneNumber(string _login, string _password, string _verifyPassword)
+        {
+            //Настройка, arrange
+            var login = _login;
+            var password = _password;
+            var verifyPassword = _verifyPassword;
+            //Действие, act
+            var isValidated = Validation.Validate(login, password, verifyPassword);
+            var contains = isValidated.Item2.Contains("Phone number isn't correct\n");
+
+            //Проверка, assert
+            Console.WriteLine(isValidated.Item2);
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.IsFalse(isValidated.Item1);
+                    Assert.IsTrue(contains);
+                });
+        }
+        [TestCase("+7-999--52-a565", "password", "password")]
+        public void TestSymbolsInPhoneNumber(string _login, string _password, string _verifyPassword)
         {
             //Настройка, arrange
             var login = _login;
@@ -231,6 +311,26 @@ namespace TestValidation
         }
         [TestCase("Алексей", "PASSWORD", "PASSWORD1")]
         public void TestDatabaseConnect(string _login, string _password, string _verifyPassword)
+        {
+            //Настройка, arrange
+            var login = _login;
+            var password = _password;
+            var verifyPassword = _verifyPassword;
+            //Действие, act
+            var isValidated = Validation.Validate(login, password, verifyPassword);
+            var contains = isValidated.Item2.Contains("Ошибка подключения к БД:");
+
+            //Проверка, assert
+            Console.WriteLine(isValidated.Item2);
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.IsFalse(isValidated.Item1);
+                    Assert.IsTrue(contains);
+                });
+        }
+        [TestCase("Алексей", "PASSWORD", "PASSWORD1"), MaxTime(5)]
+        public void TestSpeed(string _login, string _password, string _verifyPassword)
         {
             //Настройка, arrange
             var login = _login;
